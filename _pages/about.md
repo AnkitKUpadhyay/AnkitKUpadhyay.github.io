@@ -8,7 +8,10 @@ redirect_from:
   - /about.html
 ---
 
-This is the front page of a website that is powered by the [academicpages template](https://github.com/academicpages/academicpages.github.io) and hosted on GitHub pages. [GitHub pages](https://pages.github.com) is a free service in which websites are built and hosted from code and data stored in a GitHub repository, automatically updating when a new commit is made to the respository. This template was forked from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/) created by Michael Rose, and then extended to support the kinds of content that academics have: publications, talks, teaching, a portfolio, blog posts, and a dynamically-generated CV. You can fork [this repository](https://github.com/academicpages/academicpages.github.io) right now, modify the configuration and markdown files, add your own PDFs and other content, and have your own site for free, with no ads! An older version of this template powers my own personal website at [stuartgeiger.com](http://stuartgeiger.com), which uses [this Github repository](https://github.com/staeiou/staeiou.github.io).
+I am immensely priveleged to be an incoming CS Ph.D student at Rensselaer Polytechnic Institute(RPI) in Troy, New York.I have received my Bachelors degree in Computer Science and Engineering (CSE) from JSS Academy of Technical Education in Bangalore, India. My undergraduate thesis titled " Cross Lingual Transfer Learning for Natural language Understanding" was advised by Ms. Snehalatha N and was generously supported (funded) by Karnataka State Council for Science and Technology(KSCST).
+
+My research interests are in the field of Deep Learning and Natural Language Processing. I would like to work towards extending the use of NLP technologies to a wider set of languages, particularly low-resource languages. Through my research, I would like to work towards efficiently leveraging pretrained multilingual models to perform tasks in low-resource languages using cross-lingual and domain transfer learning since it would profoundly impact designing systems, especially for low-income regions of the world. In turn, it will be helpful to remove bias and foster technological inclusion. 
+
 
 A data-driven personal website
 ======
