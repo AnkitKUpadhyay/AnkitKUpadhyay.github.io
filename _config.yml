@@ -7,7 +7,7 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Ankit Kumar Upadhyay"
+title                    : <span style="color: red;">"ANKIT KUMAR UPADHYAY"</span>
 title_separator          : "-"
 name                     : &name "Ankit Kumar Upadhyay"
 description              : &description "personal description"
