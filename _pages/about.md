@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 {: style="text-align: justify" }
-I am immensely priveleged to be an incoming **CS Ph.D** student at [Rensselaer Polytechnic Institute (RPI)](https://rpi.edu/) in Troy, New York. I have received my Bachelors degree in Computer Science and Engineering (CSE) from [JSS Academy of Technical Education](https://jssateb.ac.in/) in Bangalore, India. My undergraduate thesis titled **Cross Lingual Transfer Learning for Natural language Understanding** was advised by Ms. Snehalatha N and was generously supported (funded) by **Karnataka State Council for Science and Technology (KSCST)**.<br> 
+I am immensely priveleged to be an incoming **CS Ph.D** student at [Rensselaer Polytechnic Institute (RPI)](https://rpi.edu/) in Troy, New York. I have received my Bachelors degree in Computer Science and Engineering (CSE) from [Visvesvaraya Technological University](https://vtu.ac.in/) in Bangalore, India. My undergraduate thesis titled **Cross Lingual Transfer Learning for Natural language Understanding** was advised by Ms. Snehalatha N and was generously supported (funded) by **Karnataka State Council for Science and Technology (KSCST)**.<br> 
 
 
 Research Statement
