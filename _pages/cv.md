@@ -17,4 +17,4 @@ Education
   
 Detailed CV
 ======
-[Click here](/files/CV_website_Ankit) for my detailed CV.
+[Click here](/files/CV_website_Ankit.pdf) for my detailed CV.
