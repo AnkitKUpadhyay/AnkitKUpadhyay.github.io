@@ -17,4 +17,4 @@ Education
   
 Detailed CV
 ======
-[Click here](/files/CV_website_Ankit.pdf) for my detailed CV.
+[Click here](http://ankitKUpadhyay.github.io/files/CV_website_Ankit.pdf) for my detailed CV.
