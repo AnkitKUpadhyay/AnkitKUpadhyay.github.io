@@ -1,5 +1,5 @@
 ---
-title: "Teaching Assistant- To be Updated"
+title: "Research Assistant"
 collection: teaching
 type: "Undergraduate course"
 permalink: /teaching/2014-spring-teaching-1
@@ -8,5 +8,5 @@ date: 2023-08-28
 location: "Troy (NY), USA"
 ---
 
-This page will be updated when I start my position as Teaching Assistant in the Fall 2023. 
+I am working with Professor Charles V Stewart for an NSF funded AI Institute ICICLE, building computer vision applications for wildlife conservation.
 
