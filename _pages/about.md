@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 {: style="text-align: justify" }
-I am immensely priveleged to be an incoming **CS Ph.D** student at [Rensselaer Polytechnic Institute (RPI)](https://rpi.edu/) in Troy, New York. I have received my Bachelors degree in Computer Science and Engineering (CSE) from [Visvesvaraya Technological University](https://vtu.ac.in/) in Bangalore, India. My undergraduate thesis titled **Cross Lingual Transfer Learning for Natural language Understanding** was advised by Ms. Snehalatha N and was generously supported (funded) by **Karnataka State Council for Science and Technology (KSCST)**.<br> 
+I am a **CS Ph.D** student at [Rensselaer Polytechnic Institute (RPI)](https://rpi.edu/) in Troy, New York. I have received my Bachelors degree in Computer Science and Engineering (CSE) from [Visvesvaraya Technological University](https://vtu.ac.in/) in Bangalore, India. My undergraduate thesis titled **Cross Lingual Transfer Learning for Natural language Understanding** was advised by Ms. Snehalatha N and was generously supported (funded) by **Karnataka State Council for Science and Technology (KSCST)**.<br> 
 
 
 Research Statement
@@ -18,4 +18,4 @@ My research interests are in the field of **Deep Learning** and **Natural Langua
 
 {: .notice}
 > 🔔
-> <span style="color: red;">**I will be starting my Ph.D in August 2023.**</span>
+> <span style="color: red;">**Currently, I am working as an RA under the supervision of Professor Charles V Stewart for NSF AI Institute, ICICLE, developing computer vision applications for wildlife conservation.**</span>
