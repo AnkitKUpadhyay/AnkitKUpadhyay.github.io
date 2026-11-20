@@ -1,149 +1,138 @@
-import React, { useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
-import { publicationFilters, publications } from "../data/publications";
+import React, { useEffect, useState } from "react";
+import { ChevronDown, Link as LinkIcon, Plus } from "lucide-react";
+import { publications } from "../data/publications";
+import { Savanna } from "./Habitat";
 
-function formatAuthors(authors) {
-  return authors.map((name, idx) => {
-    const isMe = name.startsWith("Ankit");
-    return (
-      <React.Fragment key={name}>
-        {idx > 0 && ", "}
-        {isMe ? <strong className="author-self">{name}</strong> : name}
-      </React.Fragment>
-    );
-  });
+function Paper({ paper }) {
+  return (
+    <details className="paper" id={`paper-${paper.id}`}>
+      <summary>
+        <span className="paper-heading">
+          <span className="paper-meta">
+            {paper.venue && (
+              <>
+                {paper.venue}
+                <span className="meta-dot">·</span>
+              </>
+            )}
+            {paper.badge}
+          </span>
+          <span className="paper-title">{paper.title}</span>
+        </span>
+        <span className="paper-plus">
+          <Plus size={17} aria-hidden="true" />
+        </span>
+      </summary>
+      <div className="paper-info">
+        {paper.status !== "preparation" && paper.authors?.length > 0 && (
+          <p className="paper-authors">
+            {paper.authors.map((name, i) => (
+              <React.Fragment key={name}>
+                {i > 0 && ", "}
+                {name.startsWith("Ankit") ? <strong>{name}</strong> : name}
+              </React.Fragment>
+            ))}
+          </p>
+        )}
+        {paper.takeaway && <p>{paper.takeaway}</p>}
+        {paper.links.length > 0 && (
+          <div className="paper-links">
+            {paper.links.map((link) => (
+              <a href={link.href} key={link.href}>
+                <LinkIcon size={13} aria-hidden="true" />
+                {link.label}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </details>
+  );
 }
 
-export default function PublicationsSection({ filter, setFilter, highlightId }) {
-  const [openAbstracts, setOpenAbstracts] = useState({});
+export default function PublicationsSection({ paused }) {
+  const [collection, setCollection] = useState("published");
+  const [area, setArea] = useState("all");
+  const [target, setTarget] = useState(null);
+  useEffect(() => {
+    function followHash() {
+      const paper = publications.find((p) => window.location.hash === `#paper-${p.id}`);
+      if (!paper) return;
+      setArea("all");
+      setCollection(paper.status === "published" ? "published" : "manuscripts");
+      setTarget(paper.id);
+    }
+    followHash();
+    window.addEventListener("hashchange", followHash);
+    return () => window.removeEventListener("hashchange", followHash);
+  }, []);
+  useEffect(() => {
+    if (!target) return;
+    const row = document.getElementById(`paper-${target}`);
+    if (row) {
+      row.open = true;
+      row.scrollIntoView({ block: "center", behavior: "instant" });
+    }
+    setTarget(null);
+  }, [target]);
 
-  const filtered = useMemo(() => {
-    if (filter === "all") return publications;
-    if (filter === "preprints") return publications.filter((p) => p.status === "preprint");
-    return publications.filter((p) => p.area === filter);
-  }, [filter]);
-
-  function toggleAbstract(id) {
-    setOpenAbstracts((prev) => ({ ...prev, [id]: !prev[id] }));
-  }
+  const papers = publications.filter((paper) => {
+    const group = paper.status === "published" ? "published" : "manuscripts";
+    return group === collection && (area === "all" || paper.area === area);
+  });
+  const years = [...new Set(papers.map((p) => p.year))].sort((a, b) => Number(b) - Number(a));
 
   return (
-    <section className="section publications-section" id="publications">
-      <div className="section-head">
-        <div>
-          <p className="eyebrow">Publications</p>
-          <h2>Selected papers &amp; preprints</h2>
-        </div>
-
-        <div className="filter-bar" role="tablist" aria-label="Filter publications">
-          {publicationFilters.map((f) => {
-            const active = filter === f.id;
-            return (
+    <section id="publications" aria-labelledby="papers-title" className="publications">
+      <Savanna paused={paused} />
+      <div className="wrap papers-inner">
+        <div className="papers-tools">
+          <div className="collection-switch" role="group" aria-label="Publication collection">
+            {[
+              ["published", "Published & accepted"],
+              ["manuscripts", "Manuscripts"],
+            ].map(([id, label]) => (
               <button
-                key={f.id}
+                key={id}
                 type="button"
-                role="tab"
-                aria-selected={active}
-                className={`filter-pill ${active ? "is-active" : ""}`}
-                onClick={() => setFilter(f.id)}
+                aria-pressed={collection === id}
+                onClick={() => {
+                  setCollection(id);
+                  setArea("all");
+                }}
               >
-                {active && (
-                  <motion.span
-                    layoutId="pub-filter-bg"
-                    className="filter-pill-bg"
-                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                  />
-                )}
-                <span>{f.label}</span>
+                {label}
               </button>
-            );
-          })}
+            ))}
+          </div>
+          <label className="area-select">
+            <span className="sr-only">Filter by research area</span>
+            <select value={area} onChange={(e) => setArea(e.target.value)}>
+              <option value="all">All research areas</option>
+              <option value="Wildlife Vision">Wildlife vision</option>
+              <option value="NLP & Knowledge">NLP &amp; knowledge</option>
+            </select>
+            <ChevronDown size={15} aria-hidden="true" />
+          </label>
         </div>
-      </div>
-
-      <div className="pub-list">
-        <AnimatePresence mode="popLayout">
-          {filtered.map((paper) => {
-            const isOpen = !!openAbstracts[paper.id];
-            const isHighlighted = highlightId === paper.id;
-            const isOralOrAccepted =
-              paper.badge === "Oral" || paper.badge === "Accepted";
-
-            return (
-              <motion.article
-                key={paper.id}
-                id={`paper-${paper.id}`}
-                layout
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                className={`pub-row ${isHighlighted ? "is-highlighted" : ""}`}
-              >
-                <div className="pub-left">
-                  <span className="pub-year">{paper.year}</span>
-                  <span className="pub-venue">{paper.venue}</span>
-                  <span
-                    className={`pub-badge ${
-                      isOralOrAccepted
-                        ? "is-accent"
-                        : paper.status === "preprint"
-                        ? "is-muted"
-                        : ""
-                    }`}
-                  >
-                    {paper.badge}
-                  </span>
-                </div>
-
-                <div className="pub-body">
-                  <h3>{paper.title}</h3>
-                  <p className="pub-authors">{formatAuthors(paper.authors)}</p>
-                  <p className="pub-takeaway">{paper.takeaway}</p>
-
-                  <div className="pub-actions">
-                    {paper.links.map((link) => (
-                      <a
-                        key={link.label}
-                        href={link.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="pub-link"
-                      >
-                        <span>{link.label}</span>
-                        <ArrowUpRight size={13} />
-                      </a>
-                    ))}
-                    <button
-                      type="button"
-                      className={`pub-abstract-btn ${isOpen ? "is-open" : ""}`}
-                      onClick={() => toggleAbstract(paper.id)}
-                      aria-expanded={isOpen}
-                    >
-                      <span>Abstract</span>
-                      <ChevronDown size={14} />
-                    </button>
-                  </div>
-
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        className="pub-abstract"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                      >
-                        <p>{paper.abstract}</p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.article>
-            );
-          })}
-        </AnimatePresence>
+        {years.map((year) => (
+          <section key={year} className="year-group" aria-label={`Work from ${year}`}>
+            <h3>{year}</h3>
+            <div>
+              {papers
+                .filter((paper) => paper.year === year)
+                .map((paper) => (
+                  <Paper key={paper.id} paper={paper} />
+                ))}
+            </div>
+          </section>
+        ))}
+        {!years.length && (
+          <p className="empty-results" role="status">
+            No manuscripts in this research area.{" "}
+            <button onClick={() => setArea("all")}>Show all areas</button>
+          </p>
+        )}
       </div>
     </section>
   );
