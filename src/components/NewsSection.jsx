@@ -1,9 +1,12 @@
 import React, { useRef, useState } from "react";
-import { AudioLines, Award, BookOpen, Link as LinkIcon } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight, AudioLines, Award, BookOpen } from "lucide-react";
 import { news } from "../data/site";
 import { Bubbles, useHabitatMotion } from "./Habitat";
+import { OceanAtmosphere } from "./LivingAtmosphere";
 
 const icons = [BookOpen, AudioLines, Award];
+const EASE = [0.22, 1, 0.36, 1];
 
 export default function NewsSection({ paused }) {
   const [selected, setSelected] = useState(0);
@@ -27,27 +30,24 @@ export default function NewsSection({ paused }) {
 
   return (
     <section id="news" ref={section} className="news-section" aria-labelledby="news-heading">
+      <OceanAtmosphere paused={paused} dense />
       <Bubbles />
-      <div className="wrap news-grid">
+
+      <motion.div
+        className="wrap news-grid"
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.72, ease: EASE }}
+      >
         <div className="news-heading">
-          <p className="kicker">
-            <span />
-            Field notes
-          </p>
           <h2 id="news-heading">
             Latest <em>news.</em>
           </h2>
         </div>
+
         <div className="news-picker">
-          <p className="bubble-instruction" id="news-help">
-            Select a bubble to read an update
-          </p>
-          <div
-            className="bubble-set"
-            role="tablist"
-            aria-label="News updates"
-            aria-describedby="news-help"
-          >
+          <div className="bubble-set" role="tablist" aria-label="News updates">
             {news.map((story, i) => {
               const Icon = icons[i];
               return (
@@ -56,7 +56,7 @@ export default function NewsSection({ paused }) {
                   key={story.id}
                   role="presentation"
                 >
-                  <button
+                  <motion.button
                     type="button"
                     className="news-bubble"
                     role="tab"
@@ -67,34 +67,47 @@ export default function NewsSection({ paused }) {
                     ref={(el) => {
                       buttons.current[i] = el;
                     }}
+                    whileHover={paused ? undefined : { scale: 1.045 }}
+                    whileTap={paused ? undefined : { scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 24 }}
                     onKeyDown={(e) => onTabKey(e, i)}
                     onClick={() => setSelected(i)}
                   >
                     <Icon size={17} aria-hidden="true" strokeWidth={1.4} />
                     <span>{story.label}</span>
                     <small>{story.kind}</small>
-                  </button>
+                  </motion.button>
                 </div>
               );
             })}
           </div>
         </div>
-        <article
-          className="news-story"
-          id="news-story"
-          role="tabpanel"
-          tabIndex={0}
-          aria-labelledby={`news-tab-${item.id}`}
-        >
-          <time dateTime={item.iso}>{item.date}</time>
-          <h3>{item.headline}</h3>
-          <p>{item.body}</p>
-          <a className="text-link" href={item.href}>
-            <LinkIcon size={14} aria-hidden="true" />
-            {item.link}
-          </a>
-        </article>
-      </div>
+
+        <div className="news-story-shell">
+          <AnimatePresence mode="wait">
+            <motion.article
+              key={item.id}
+              className="news-story"
+              id="news-story"
+              role="tabpanel"
+              tabIndex={0}
+              aria-labelledby={`news-tab-${item.id}`}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.34, ease: EASE }}
+            >
+              <time dateTime={item.iso}>{item.date}</time>
+              <h3>{item.headline}</h3>
+              <p>{item.body}</p>
+              <a className="text-link" href={item.href} target="_blank" rel="noreferrer">
+                <span>{item.link}</span>
+                <ArrowUpRight size={14} aria-hidden="true" />
+              </a>
+            </motion.article>
+          </AnimatePresence>
+        </div>
+      </motion.div>
     </section>
   );
 }

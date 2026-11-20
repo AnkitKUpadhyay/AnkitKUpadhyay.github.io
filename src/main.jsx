@@ -1,6 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Download, Mail, Menu, Pause, Play, X } from "lucide-react";
+import { motion, useScroll, useSpring } from "framer-motion";
+import {
+  ArrowUpRight,
+  Check,
+  Copy,
+  Download,
+  Mail,
+  Menu,
+  Pause,
+  Play,
+  X,
+} from "lucide-react";
 import { profile } from "./data/site";
 import { Hero } from "./components/Habitat";
 import HabitatCrossing from "./components/HabitatCrossing";
@@ -8,36 +19,13 @@ import NewsSection from "./components/NewsSection";
 import PublicationsSection from "./components/PublicationsSection";
 import "./styles.css";
 
+const EASE = [0.22, 1, 0.36, 1];
+
 const links = [
   ["News", "#news"],
   ["Publications", "#publications"],
-  ["About", "#about"],
+  ["Contact", "#contact"],
 ];
-
-function Compass() {
-  return (
-    <svg aria-hidden="true" width="35" height="35" viewBox="0 0 40 40" fill="none">
-      <circle cx="20" cy="20" r="15.5" stroke="currentColor" strokeWidth=".75" />
-      <circle
-        cx="20"
-        cy="20"
-        r="11.5"
-        stroke="currentColor"
-        strokeDasharray="1 3.5"
-        opacity=".65"
-      />
-      <path
-        d="M20 1.7 22.4 17.6 38.3 20 22.4 22.4 20 38.3 17.6 22.4 1.7 20 17.6 17.6Z"
-        stroke="currentColor"
-        strokeWidth=".8"
-      />
-      <path
-        d="M20 2v18l-2.4-2.4ZM38 20H20l2.4-2.4ZM20 38V20l2.4 2.4ZM2 20h18l-2.4 2.4Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
 
 function useMotionSetting() {
   const [preference, setPreference] = useState(() => {
@@ -74,8 +62,19 @@ function useMotionSetting() {
 
 function Header({ paused, toggleMotion }) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const menuButton = useRef(null);
   const header = useRef(null);
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 18);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     function closeOnEscape(e) {
@@ -85,7 +84,7 @@ function Header({ paused, toggleMotion }) {
       }
     }
     function closeOutside(e) {
-      if (!header.current.contains(e.target)) setOpen(false);
+      if (!header.current?.contains(e.target)) setOpen(false);
     }
     document.addEventListener("keydown", closeOnEscape);
     document.addEventListener("pointerdown", closeOutside);
@@ -94,8 +93,9 @@ function Header({ paused, toggleMotion }) {
       document.removeEventListener("pointerdown", closeOutside);
     };
   }, [open]);
+
   return (
-    <header className="site-header" ref={header}>
+    <header className={`site-header ${scrolled ? "is-scrolled" : ""}`} ref={header}>
       <div className="wrap header-bar">
         <a
           className="brand"
@@ -103,7 +103,13 @@ function Header({ paused, toggleMotion }) {
           href="#top"
           onClick={() => setOpen(false)}
         >
-          <Compass />
+          <img
+            className="brand-avatar"
+            src="/assets/headshot.jpeg"
+            width="36"
+            height="36"
+            alt=""
+          />
           <span>Ankit Upadhyay</span>
         </a>
         <nav
@@ -119,21 +125,17 @@ function Header({ paused, toggleMotion }) {
         </nav>
         <div className="header-actions">
           <a className="cv-link" href={profile.cvUrl} download>
-            <Download size={15} strokeWidth={1.6} aria-hidden="true" />
+            <Download size={14} strokeWidth={1.6} aria-hidden="true" />
             CV
           </a>
           <button
             className="round-control motion-control"
             type="button"
             onClick={toggleMotion}
-            aria-label={paused ? "Resume habitat motion" : "Pause habitat motion"}
-            title={paused ? "Resume motion" : "Pause motion"}
+            aria-label={paused ? "Resume animations" : "Pause animations"}
+            title={paused ? "Resume animations" : "Pause animations"}
           >
-            {paused ? (
-              <Play size={15} aria-hidden="true" />
-            ) : (
-              <Pause size={15} aria-hidden="true" />
-            )}
+            {paused ? <Play size={15} aria-hidden="true" /> : <Pause size={15} aria-hidden="true" />}
           </button>
           <button
             type="button"
@@ -152,10 +154,28 @@ function Header({ paused, toggleMotion }) {
   );
 }
 
-function About() {
+function ContactSection() {
+  const [copied, setCopied] = useState(false);
+
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${profile.email}`;
+    }
+  }
+
   return (
-    <section id="about" className="about-section" aria-labelledby="about-heading">
-      <div className="wrap about-inner">
+    <section id="contact" className="contact-section" aria-labelledby="contact-heading">
+      <motion.div
+        className="wrap contact-inner"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.68, ease: EASE }}
+      >
         <div className="portrait-wrap">
           <img
             src="/assets/headshot.jpeg"
@@ -165,40 +185,59 @@ function About() {
             alt="Ankit Upadhyay"
           />
         </div>
-        <div className="about-copy">
-          <p className="kicker">
-            <span />
-            About me
-          </p>
-          <h2 id="about-heading">
-            Ankit <em>Upadhyay.</em>
+
+        <div className="contact-copy">
+          <h2 id="contact-heading">
+            Get in <em>touch.</em>
           </h2>
-          <p>
-            I work with Charles V. Stewart in Troy, New York. Beyond wildlife vision, I study how
-            language models learn across languages with limited data and how we can check their
-            claims against a knowledge graph.
+          <p className="contact-lead">
+            Always glad to connect on wildlife computer vision, foundation models, research
+            collaborations, and internships.
           </p>
-          <a className="about-email" href={`mailto:${profile.email}`}>
-            <Mail size={17} aria-hidden="true" />
-            {profile.email}
-          </a>
+
+          <div className="contact-email-row">
+            <a className="contact-email" href={`mailto:${profile.email}`}>
+              <Mail size={16} aria-hidden="true" />
+              <span>{profile.email}</span>
+            </a>
+            <button
+              type="button"
+              className="copy-email-btn"
+              onClick={copyEmail}
+              aria-label="Copy email address"
+            >
+              {copied ? <Check size={13} aria-hidden="true" /> : <Copy size={13} aria-hidden="true" />}
+              <span>{copied ? "Copied" : "Copy"}</span>
+            </button>
+          </div>
+
           <div className="social-links" aria-label="Research and professional profiles">
             {profile.socials.map((link) => (
-              <a key={link.href} href={link.href}>
-                {link.label}
+              <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
+                <span>{link.label}</span>
+                <ArrowUpRight size={13} aria-hidden="true" />
               </a>
             ))}
           </div>
+
+          <p className="support-note">{profile.support}</p>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
 
 function App() {
   const [paused, toggleMotion] = useMotionSetting();
+  const { scrollYProgress } = useScroll();
+  const progressScale = useSpring(scrollYProgress, {
+    stiffness: 180,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
   useEffect(() => {
-    const aliases = { "#research": "#publications", "#background": "#news", "#contact": "#about" };
+    const aliases = { "#research": "#publications", "#background": "#news", "#about": "#contact" };
     function resolveAlias() {
       const target = aliases[location.hash];
       if (target) {
@@ -210,8 +249,14 @@ function App() {
     window.addEventListener("hashchange", resolveAlias);
     return () => window.removeEventListener("hashchange", resolveAlias);
   }, []);
+
   return (
     <>
+      <motion.div
+        className="scroll-filament"
+        style={{ scaleX: progressScale }}
+        aria-hidden="true"
+      />
       <a className="skip-link" href="#content">
         Skip to content
       </a>
@@ -221,12 +266,12 @@ function App() {
         <NewsSection paused={paused} />
         <HabitatCrossing paused={paused} />
         <PublicationsSection paused={paused} />
-        <About />
+        <ContactSection />
       </main>
       <footer>
         <div className="wrap footer-line">
-          <span>© {new Date().getFullYear()} Ankit Upadhyay</span>
-          <a href="#top">Back to top</a>
+          <span>© {new Date().getFullYear()} Ankit Upadhyay · Troy, NY</span>
+          <a href="#top">Back to top ↑</a>
         </div>
       </footer>
     </>

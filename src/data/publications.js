@@ -3,7 +3,7 @@ export const publications = [
     id: "cfr-2027",
     title: "CounterFactual Retrieval for Evidence-Aware Individual Animal Identification",
     authors: [
-      "Ankit K. Upadhyay",
+      "Ankit Kumar Upadhyay",
       "Aleksandr Algasov",
       "Ekaterina Nepovinnykh",
       "Fedor Zolotarev",
@@ -18,7 +18,7 @@ export const publications = [
     area: "Wildlife Vision",
     status: "published",
     takeaway:
-      "We compare the same retrieval task with the full photograph, the animal alone, and the background alone to see what evidence a model uses to identify an individual.",
+      "We compare retrieval across the full photograph, the animal alone, and the background alone across 34 datasets to measure whether a model relies on true biometric evidence or environmental shortcuts.",
     links: [
       { label: "arXiv", href: "https://arxiv.org/abs/2611.06864" },
       { label: "Code", href: "https://github.com/Imageomics/cfr" },
@@ -44,7 +44,7 @@ export const publications = [
     area: "Wildlife Vision",
     status: "published",
     takeaway:
-      "We use vision foundation models to classify an animal’s viewpoint and whether a photograph is suitable for identification, using fewer hand-labeled examples.",
+      "Frozen vision foundation models (SAM 3 and DINOv3) classify animal viewpoint and census suitability on par with fine-tuned CNNs while requiring far fewer labeled examples.",
     links: [
       { label: "OpenReview", href: "https://openreview.net/forum?id=DXtNhEX8U7" },
       {
@@ -72,12 +72,10 @@ export const publications = [
     area: "Wildlife Vision",
     status: "published",
     takeaway:
-      "FAWN combines segmentation with lightweight classifiers to identify useful photographs of zebras and giraffes across field sites.",
+      "FAWN pairs concept segmentation and frozen foundation embeddings with CPU-trainable shallow classifiers that transfer zero-shot across unseen wildlife field sites.",
     links: [
-      {
-        label: "Workshop paper",
-        href: "https://drive.google.com/file/d/1OflDX14HKfkomCvWBk0fZSmBGEloUeN3/view",
-      },
+      { label: "OpenReview", href: "https://openreview.net/pdf?id=gmZLncO9zM" },
+      { label: "PDF", href: "/files/fawn-2026.pdf" },
     ],
   },
   {
@@ -91,8 +89,11 @@ export const publications = [
     area: "NLP & Knowledge",
     status: "published",
     takeaway:
-      "We test whether a model can verify a claim from evidence in a knowledge graph, and how its answer changes when it has to rely on memory.",
-    links: [{ label: "ACL Anthology", href: "https://aclanthology.org/2026.fever-1.3/" }],
+      "We test how symbolic structure, neural semantics, and explicit knowledge-graph evidence grounding separate genuine fact verification from LLM memorization on 108K FACTKG claims.",
+    links: [
+      { label: "ACL Anthology", href: "https://aclanthology.org/2026.fever-1.3/" },
+      { label: "DOI", href: "https://doi.org/10.18653/v1/2026.fever-1.3" },
+    ],
   },
   {
     id: "cv4a-2025",
@@ -115,13 +116,8 @@ export const publications = [
     area: "Wildlife Vision",
     status: "published",
     takeaway:
-      "Drone footage captures the same animal from several angles. We use those tracks to link photographs of its left and right flanks.",
-    links: [
-      {
-        label: "Workshop paper",
-        href: "https://drive.google.com/file/d/1WCaNiep6sRbWAcoxssKkuwwr3OwrwoOr/view",
-      },
-    ],
+      "Drone footage captures individuals across viewpoints; we sample informative detections along tracks and cluster multiview embeddings to link left and right flanks.",
+    links: [{ label: "OpenReview", href: "https://openreview.net/pdf?id=hHbRvzQRHI" }],
   },
   {
     id: "xnli-2023",
@@ -133,10 +129,11 @@ export const publications = [
     area: "NLP & Knowledge",
     status: "published",
     takeaway:
-      "We test how translating training data and changing the source language affect natural language inference in languages such as Swahili and Urdu.",
+      "We re-translate XNLI/MNLI across 14 languages and evaluate non-English pivot transfer for underrepresented languages such as Swahili and Urdu.",
     links: [
       { label: "IEEE", href: "https://doi.org/10.1109/I2CT57861.2023.10126332" },
       { label: "arXiv", href: "https://arxiv.org/abs/2301.06527" },
+      { label: "Hugging Face", href: "https://huggingface.co/papers/2301.06527" },
     ],
   },
   {
@@ -159,7 +156,7 @@ export const publications = [
     area: "Wildlife Vision",
     status: "preprint",
     takeaway:
-      "MAVRIC groups sightings of the same animal across drone video and directs expert attention to identity matches that need review.",
+      "MAVRIC resolves individual identities across aerial drone tracks, cutting expert comparisons by ~97% by requesting human verification only where algorithmic confidence is low.",
     links: [],
   },
   {
@@ -186,7 +183,7 @@ export const publications = [
     area: "Wildlife Vision",
     status: "preprint",
     takeaway:
-      "A graph of candidate matches helps experts find the uncertain links in a catalog of individual animals.",
+      "Models individual identity curation as signed, confidence-weighted match graphs so experts focus strictly on uncertain links.",
     links: [{ label: "bioRxiv", href: "https://doi.org/10.64898/2026.10.19.760261" }],
   },
   {
@@ -207,20 +204,29 @@ export const publications = [
     area: "Wildlife Vision",
     status: "preprint",
     takeaway:
-      "Drone video, flight telemetry, and behavior annotations document giraffes and zebras at the Mpala Research Centre in Kenya.",
-    links: [{ label: "Dataset", href: "https://huggingface.co/datasets/imageomics/KABR" }],
+      "Open in-situ drone video, flight telemetry, and fine-grained behavior archive for reticulated giraffes, plains zebras, and Grévy’s zebras in Laikipia, Kenya.",
+    links: [
+      { label: "Dataset", href: "https://huggingface.co/datasets/imageomics/KABR" },
+      { label: "Project", href: "https://kabrdata.xyz/" },
+    ],
   },
   {
     id: "cross-view-2026",
     title: "Cross-Viewpoint Identity Retrieval in Bilaterally Asymmetric Patterned Animals",
-    authors: [],
-    venue: "",
+    authors: [
+      "Ankit Kumar Upadhyay",
+      "Ekaterina Nepovinnykh",
+      "Fedor Zolotarev",
+      "Charles V. Stewart",
+      "Sara Beery",
+    ],
+    venue: "CVPR 2027 Target",
     year: "2026",
     badge: "In Preparation",
     area: "Wildlife Vision",
     status: "preparation",
     takeaway:
-      "We study how to recognize an animal from opposite sides when the markings on its two flanks differ.",
+      "Studies cross-viewpoint individual matching when an animal’s left and right flanks exhibit distinct biometric coat markings.",
     links: [],
   },
 ];

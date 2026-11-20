@@ -1,30 +1,59 @@
 import React, { useEffect, useRef } from "react";
-import { ChevronDown, Waves, Sun } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowDown, ArrowUpRight, Download } from "lucide-react";
+import { profile } from "../data/site";
+import LivingAnimalCanvas from "./LivingAnimalCanvas";
+import { OceanAtmosphere, SavannaAtmosphere } from "./LivingAtmosphere";
 
-// Update a visible plate only while the document is moving. The native scroll
-// position stays in charge, including when someone follows a section link.
+const EASE = [0.22, 1, 0.36, 1];
+
+/**
+ * Inertial scroll-linked depth motion for habitat plates.
+ * Smoothly interpolates parallax offset toward scroll target so section
+ * transitions feel fluid and organic rather than mechanically locked to pixels.
+ */
 export function useHabitatMotion(paused) {
   const ref = useRef(null);
   useEffect(() => {
     const el = ref.current;
     if (!el || paused) return;
-    let frame = 0;
-    function paint() {
-      frame = 0;
+    let raf = 0;
+    let visible = false;
+    let curX = 0;
+    let curY = 0;
+    let targetX = 0;
+    let targetY = 0;
+
+    function computeTarget() {
       const { top, height } = el.getBoundingClientRect();
       const phase = Math.min(
         1,
-        Math.max(-1, (innerHeight / 2 - top - height / 2) / ((innerHeight + height) / 2)),
+        Math.max(-1, (window.innerHeight / 2 - top - height / 2) / ((window.innerHeight + height) / 2)),
       );
-      el.style.setProperty("--drift-x", `${(phase * 33).toFixed(1)}px`);
-      el.style.setProperty("--drift-y", `${(phase * 24).toFixed(1)}px`);
+      targetX = phase * 30;
+      targetY = phase * 22;
     }
+
+    function step() {
+      raf = 0;
+      curX += (targetX - curX) * 0.09;
+      curY += (targetY - curY) * 0.09;
+      el.style.setProperty("--drift-x", `${curX.toFixed(2)}px`);
+      el.style.setProperty("--drift-y", `${curY.toFixed(2)}px`);
+      if (visible && (Math.abs(targetX - curX) > 0.08 || Math.abs(targetY - curY) > 0.08)) {
+        raf = requestAnimationFrame(step);
+      }
+    }
+
     function schedule() {
-      if (!frame) frame = requestAnimationFrame(paint);
+      computeTarget();
+      if (!raf) raf = requestAnimationFrame(step);
     }
+
     const observer = new IntersectionObserver(([entry]) => {
-      el.dataset.visible = String(entry.isIntersecting);
-      if (entry.isIntersecting) {
+      visible = entry.isIntersecting;
+      el.dataset.visible = String(visible);
+      if (visible) {
         schedule();
         window.addEventListener("scroll", schedule, { passive: true });
         window.addEventListener("resize", schedule);
@@ -34,9 +63,10 @@ export function useHabitatMotion(paused) {
       }
     });
     observer.observe(el);
+
     return () => {
       observer.disconnect();
-      cancelAnimationFrame(frame);
+      cancelAnimationFrame(raf);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
     };
@@ -45,18 +75,18 @@ export function useHabitatMotion(paused) {
 }
 
 export function Bubbles({ sparse = false }) {
-  const sizes = sparse ? [8, 15, 5, 24, 9, 6] : [9, 28, 7, 43, 13, 6, 21, 8, 36, 11, 16, 5];
+  const sizes = sparse ? [7, 14, 5, 22, 9, 6] : [8, 24, 6, 36, 12, 6, 18, 7, 29, 10, 14, 5];
   return (
     <div aria-hidden="true" className="sea-bubbles">
       {sizes.map((size, i) => (
         <i
           key={i}
           style={{
-            "--x": `${(i * 29 + 5) % 98}%`,
-            "--y": `${(i * 23 + 11) % 95}%`,
+            "--x": `${(i * 29 + 7) % 96}%`,
+            "--y": `${(i * 23 + 11) % 92}%`,
             "--size": `${size}px`,
-            "--time": `${10 + (i % 6)}s`,
-            "--delay": `${-i * 2.7}s`,
+            "--time": `${11 + (i % 6)}s`,
+            "--delay": `${-i * 2.5}s`,
           }}
         />
       ))}
@@ -78,55 +108,63 @@ export function Hero({ paused }) {
             alt=""
             fetchPriority="high"
           />
+          <OceanAtmosphere paused={paused} />
           <div className="animal-parallax">
-            <img
-              className="animal-layer"
+            <LivingAnimalCanvas
+              className="animal-layer shark-canvas"
               src="/assets/atlas/shark-layer.webp"
-              width="1923"
-              height="818"
-              alt=""
-              fetchPriority="high"
+              mode="shark"
+              width={1923}
+              height={818}
+              paused={paused}
+              interactivePointer
             />
           </div>
         </div>
       </div>
+
       <Bubbles sparse />
+
       <div className="wrap hero-layout">
-        <div className="hero-copy">
-          <p className="kicker hero-kicker">
-            <span />
-            AI for biodiversity
-          </p>
+        <motion.div
+          className="hero-copy"
+          initial={{ opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: EASE }}
+        >
           <h1 id="hero-heading">
-            Computer vision
-            <br />
-            <em>in the wild.</em>
+            Ankit <em>Upadhyay</em>
           </h1>
-          <p className="hero-bio">
-            I’m Ankit Upadhyay, a PhD researcher at Rensselaer Polytechnic Institute. I study how
-            computers recognize individual animals and interpret their behavior.
-          </p>
-          <a className="button-primary" href="#publications">
-            Explore publications
-          </a>
-        </div>
-        <aside className="specimen-tag hero-specimen" aria-label="Illustrated species">
-          <i className="specimen-pin" aria-hidden="true" />
-          <span>
-            Whale shark<em>Rhincodon typus</em>
-          </span>
-        </aside>
+
+          <p className="hero-bio">{profile.bioPrimary}</p>
+          <p className="hero-bio hero-bio-secondary">{profile.bioSecondary}</p>
+
+          <div className="hero-actions">
+            <a className="button-primary" href="#publications">
+              <span>Publications</span>
+              <ArrowUpRight size={15} aria-hidden="true" />
+            </a>
+            <a className="button-ghost" href={profile.cvUrl} download>
+              <Download size={15} aria-hidden="true" />
+              <span>Curriculum Vitae</span>
+            </a>
+          </div>
+
+          <div className="hero-profiles" aria-label="Academic and code profiles">
+            <a href={`mailto:${profile.email}`}>Email</a>
+            {profile.socials.map((s) => (
+              <a key={s.label} href={s.href} target="_blank" rel="noreferrer">
+                {s.label}
+              </a>
+            ))}
+          </div>
+        </motion.div>
       </div>
-      <div className="hero-rail">
-        <div className="wrap hero-rail-inner">
-          <span className="habitat-label">
-            <Waves aria-hidden="true" size={17} />
-            Open ocean
-          </span>
-          <a href="#news" className="dive-link">
-            Dive into the news <ChevronDown size={16} aria-hidden="true" />
-          </a>
-        </div>
+
+      <div className="hero-scroll-cue">
+        <a href="#news" aria-label="Scroll to latest news">
+          <ArrowDown size={17} strokeWidth={1.6} aria-hidden="true" />
+        </a>
       </div>
     </section>
   );
@@ -146,25 +184,30 @@ export function Savanna({ paused }) {
             alt=""
             loading="lazy"
           />
+          <SavannaAtmosphere paused={paused} />
           <div className="animal-parallax">
-            <img
-              className="animal-layer"
+            <LivingAnimalCanvas
+              className="animal-layer zebra-canvas"
               src="/assets/atlas/zebra-layer.webp"
-              width="1923"
-              height="818"
-              alt=""
-              loading="lazy"
+              mode="zebra"
+              width={1923}
+              height={818}
+              paused={paused}
             />
           </div>
         </div>
       </div>
-      <div className="wrap savanna-inner">
-        <p className="kicker">
-          <Sun size={16} aria-hidden="true" />
-          Savanna
-        </p>
+
+      <motion.div
+        className="wrap savanna-inner"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.72, ease: EASE }}
+      >
         <h2 id="papers-title">Publications</h2>
-      </div>
+      </motion.div>
+      <div className="savanna-fade" aria-hidden="true" />
     </div>
   );
 }
