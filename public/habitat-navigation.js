@@ -1,6 +1,10 @@
 // Install before first paint so a document-to-document transition can start at the tapped bubble.
 (() => {
-  const barePage = ["/news", "/publications", "/about"].includes(location.pathname);
+  if (["/about", "/about/", "/about/index.html"].includes(location.pathname)) {
+    location.replace("/contact/" + location.search + location.hash);
+    return;
+  }
+  const barePage = ["/news", "/publications", "/contact"].includes(location.pathname);
   if (barePage) {
     location.replace(location.pathname + "/" + location.search + location.hash);
     return;
@@ -31,8 +35,8 @@
       "#background": "/news/",
       "#publications": "/publications/",
       "#research": "/publications/",
-      "#about": "/about/",
-      "#contact": "/about/",
+      "#about": "/contact/",
+      "#contact": "/contact/",
     };
     const paper = location.hash.startsWith("#paper-");
     const target = paper ? "/publications/" : aliases[location.hash];
@@ -75,6 +79,8 @@
     syncMotion();
     const transition = event.viewTransition;
     if (!transition) return;
+    // A redirect, rapid second navigation or reduced motion can skip the animation.
+    transition.ready.catch(() => {});
     if (root.dataset.motion === "paused") {
       transition.skipTransition();
       return;
@@ -86,7 +92,8 @@
       root.style.setProperty("--portal-origin", origin.x + "px " + origin.y + "px");
       root.style.setProperty("--portal-radius", origin.r + "px");
       root.classList.add("through-bubble");
-      transition.finished.finally(() => root.classList.remove("through-bubble"));
+      const clearOrigin = () => root.classList.remove("through-bubble");
+      transition.finished.then(clearOrigin, clearOrigin);
     } catch {
       /* Storage is optional for navigation. */
     }

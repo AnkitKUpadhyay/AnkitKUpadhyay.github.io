@@ -1,162 +1,86 @@
 .view-home main {
   display: flex;
 }
+.view-home .brand-compass {
+  color: #d5bd98;
+}
 .landing {
   position: relative;
   isolation: isolate;
   display: flex;
   align-items: center;
   flex: 1;
-  color: #f3f2e7;
+  overflow: hidden;
   background: #062a31;
-  overflow: hidden;
-}
-.landing-water {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    linear-gradient(0deg, #062a31 0%, transparent 29%),
-    linear-gradient(90deg, #062a31 5%, #062a31f3 25%, #062a3170 49%, transparent 72%),
-    url("/assets/atlas/ocean-background.webp") 64% 49% / cover no-repeat;
-}
-.sunlight {
-  mask-image: linear-gradient(90deg, transparent, #000 22%, #000 88%, transparent);
-  position: absolute;
-  inset: -12% -5% -7% 47%;
-  opacity: 0.45;
-  transform-origin: 80% 0;
-  background: conic-gradient(
-    from 163deg at 78% -12%,
-    transparent 0deg,
-    #9de8d112 9deg,
-    transparent 13deg 18deg,
-    #c8e9c122 21deg,
-    transparent 25deg 30deg,
-    #8ad8c31f 35deg,
-    transparent 42deg
-  );
-  animation: refracted-light 14s ease-in-out infinite alternate;
-}
-@keyframes refracted-light {
-  from {
-    transform: skewX(-3deg) scaleX(0.95);
-    opacity: 0.3;
-  }
-  to {
-    transform: skewX(4deg) scaleX(1.06);
-    opacity: 0.7;
-  }
-}
-.plankton {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-.plankton i {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  opacity: 0.4;
-  border-radius: 50%;
-  background: #d6e8bf;
-  box-shadow: 0 0 6px #c4e39a7a;
-  animation: water-drift var(--period) ease-in-out infinite alternate;
-}
-.plankton i:nth-child(3n) {
-  width: 5px;
-  height: 5px;
-  background: transparent;
-  border: 1px solid #c5e5d4;
-  opacity: 0.32;
-}
-@keyframes water-drift {
-  from {
-    transform: translate(-9px, 14px);
-    opacity: 0.12;
-  }
-  to {
-    transform: translate(13px, -23px);
-    opacity: 0.47;
-  }
+  color: #f3f2e7;
 }
 .landing-layout {
   display: grid;
-  grid-template-columns: minmax(0, 0.87fr) minmax(0, 1.13fr);
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
   grid-template-areas: "intro animal" "portals animal";
   align-content: center;
   min-height: calc(100svh - var(--nav-h) - 59px);
-  column-gap: 3.5%;
-  row-gap: clamp(19px, 2.7vh, 38px);
-  padding-block: clamp(39px, 6.3vh, 95px);
+  column-gap: 2.4%;
+  row-gap: clamp(18px, 2.7vh, 32px);
+  padding-block: clamp(30px, 5vh, 75px);
 }
 .landing-intro {
   grid-area: intro;
-  align-self: end;
   position: relative;
   z-index: 1;
 }
-.landing-discipline {
-  color: var(--gold);
-  margin-bottom: clamp(13px, 2.2vh, 27px);
+.landing-identity {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 2.3vw, 42px);
+  margin-bottom: clamp(20px, 2.5vh, 30px);
+}
+.landing-portrait {
+  display: block;
+  width: clamp(125px, 11.7vw, 191px);
+  height: auto;
+  aspect-ratio: 6/7;
+  object-fit: cover;
+  border: 1px solid #dbd1b97a;
+  border-radius: 48% 48% 6px 6px;
+  box-shadow: 0 7px 26px #00171a3b;
 }
 .landing-intro h1 {
-  font-size: clamp(5rem, min(8.5vw, 14vh), 10rem);
-  line-height: 0.84;
-  letter-spacing: -0.046em;
-  margin: 0 0 clamp(19px, 3.4vh, 36px);
-  font-weight: 400;
+  color: #f6f1e3;
+  font-size: clamp(4rem, 6.4vw, 7.7rem);
+  line-height: 0.9;
+  letter-spacing: -0.047em;
+  margin: 0;
 }
 .landing-intro h1 em {
   display: block;
   color: #b9ded0;
-  letter-spacing: -0.04em;
 }
-.landing-bio {
-  max-width: 42ch;
-  color: #dae8df;
-  font-size: clamp(1rem, 1.12vw, 1.2rem);
-  line-height: 1.57;
+.landing-biography {
+  max-width: 63ch;
+  color: #e4ede6;
+  font-size: clamp(1rem, 1.08vw, 1.18rem);
+  line-height: 1.61;
   text-wrap: pretty;
 }
-.landing-bio + .landing-bio {
-  margin-top: 9px;
+.landing-biography p + p {
+  margin-top: 0.78em;
 }
 .landing-animal {
   grid-area: animal;
   position: relative;
   align-self: center;
-  margin: 0 -7% 0 -7%;
+  margin: 0 calc(-1 * var(--gutter)) 0 -3%;
   pointer-events: none;
 }
 .landing-pelagic {
   position: relative;
   width: 100%;
-  aspect-ratio: 1.68;
+  aspect-ratio: 1.53;
 }
 .shark-swimmer {
   position: absolute;
   inset: 0;
-}
-.landing-animal figcaption {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 2px 10% 0 0;
-  color: #e9efdf;
-  font-size: 0.87rem;
-}
-.landing-animal figcaption em {
-  display: block;
-  font: italic 1.13rem var(--serif);
-  color: #b9d0c1;
-}
-.species-rule {
-  height: 1px;
-  width: 34px;
-  background: #b8d1ba93;
 }
 .habitat-portals {
   grid-area: portals;
@@ -186,8 +110,8 @@
 .portal-publications {
   width: clamp(118px, 10.1vw, 171px);
 }
-.portal-about {
-  width: clamp(96px, 8vw, 135px);
+.portal-contact {
+  width: clamp(104px, 9.2vw, 145px);
 }
 .portal-glass,
 .portal-label,
@@ -234,7 +158,7 @@
 .portal-publications .portal-label svg {
   color: #efdcb1;
 }
-.portal-about .portal-glass {
+.portal-contact .portal-glass {
   border-color: #d7cdc0b5;
   animation-delay: -5s;
   background:
@@ -251,7 +175,7 @@
   background-image: url("/assets/atlas/bubble-publications.webp");
   background-position: center;
 }
-.portal-about .portal-landscape {
+.portal-contact .portal-landscape {
   opacity: 0.43;
   background-image: url("/assets/atlas/bubble-about.webp");
   background-position: center;
@@ -304,143 +228,95 @@
   text-decoration-thickness: 1px;
   text-underline-offset: 5px;
 }
-@media (min-width: 1700px) {
+
+@media (min-width: 761px) and (max-width: 1030px) {
   .landing-layout {
-    column-gap: 4%;
+    grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr);
   }
-  .landing-animal {
-    margin-inline: -5%;
+  .landing-portrait {
+    width: 110px;
   }
-}
-@media (min-width: 761px) and (max-height: 720px) {
-  .landing-layout {
-    padding-block: 28px;
-    row-gap: 17px;
+  .landing-identity {
+    gap: 17px;
   }
   .landing-intro h1 {
-    font-size: clamp(5rem, 7vw, 7rem);
-  }
-  .landing-discipline {
-    margin-bottom: 14px;
+    font-size: clamp(3.2rem, 6.6vw, 4.4rem);
   }
 }
-@media (max-width: 760px) {
+@media (max-width: 760px), (min-width: 761px) and (max-width: 960px) and (orientation: portrait) {
   .landing-layout {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "intro" "portals" "animal";
-    padding-block: clamp(25px, 4.3vh, 51px) 19px;
-    row-gap: 19px;
-    align-content: center;
+    grid-template-columns: minmax(84px, 0.76fr) minmax(0, 1.5fr);
+    grid-template-areas: "portrait animal" "name name" "bio bio" "portals portals";
+    padding-block: clamp(19px, 3vh, 37px) 23px;
+    row-gap: clamp(12px, 2vh, 19px);
+    align-items: center;
+    min-height: calc(100svh - var(--nav-h) - 48px);
+  }
+  .landing-intro,
+  .landing-identity {
+    display: contents;
+  }
+  .landing-portrait {
+    grid-area: portrait;
+    width: min(100%, 158px);
   }
   .landing-intro h1 {
-    font-size: clamp(3.8rem, 10.5vw, 5.7rem);
-    line-height: 0.99;
-    margin-bottom: 14px;
-    letter-spacing: -0.04em;
+    grid-area: name;
+    font-size: clamp(3.55rem, 12.4vw, 6.8rem);
+    line-height: 0.98;
   }
   .landing-intro h1 em {
     display: inline;
   }
-  .landing-discipline {
-    margin-bottom: 9px;
+  .landing-biography {
+    grid-area: bio;
+    max-width: 68ch;
+    font-size: 1rem;
+    line-height: 1.52;
   }
-  .landing-bio {
-    max-width: 53ch;
-    line-height: 1.48;
+  .landing-animal {
+    width: calc(100% + var(--gutter));
+    margin: 0 calc(-1 * var(--gutter)) 0 0;
   }
-  .landing-bio + .landing-bio {
-    margin-top: 7px;
-  }
-  .landing-water {
-    background:
-      linear-gradient(180deg, #062a31 13%, #062a31e8 38%, transparent 71%, #062a31 100%),
-      url("/assets/atlas/ocean-background.webp") 80% bottom/auto 65% no-repeat;
+  .landing-pelagic {
+    aspect-ratio: 1.55;
   }
   .habitat-portals {
     justify-content: flex-start;
-    gap: clamp(8px, 4vw, 24px);
+    gap: clamp(7px, 3.4vw, 22px);
   }
   .portal,
-  .portal-about {
-    width: clamp(78px, 22vw, 112px);
+  .portal-contact {
+    width: clamp(79px, 23vw, 112px);
   }
   .portal-publications {
-    width: clamp(96px, 28vw, 138px);
+    width: clamp(96px, 27vw, 137px);
   }
   .portal-label {
-    font-size: clamp(1.3rem, 4.7vw, 1.75rem);
+    font-size: clamp(1.28rem, 4.6vw, 1.8rem);
     gap: 4px;
   }
   .portal-label svg {
     width: 15px;
     height: 15px;
   }
-  .landing-animal {
-    width: min(100%, 430px);
-    justify-self: end;
-    margin: -4px 0 0;
-  }
-  .landing-pelagic {
-    aspect-ratio: 1.95;
-  }
-  .landing-animal figcaption {
-    padding: 0 3% 0 0;
-    font-size: 0.8rem;
-    gap: 7px;
-  }
-  .landing-animal figcaption em {
-    display: inline;
-    margin-left: 5px;
-    font-size: 1rem;
-  }
   .view-home .footer-inner {
     min-height: 48px;
   }
 }
-@media (max-width: 350px) {
-  .landing-intro h1 {
-    font-size: 3.35rem;
-  }
-  .habitat-portals {
-    gap: 7px;
-  }
-  .portal,
-  .portal-about {
-    width: 76px;
-  }
-  .portal-publications {
-    width: 94px;
-  }
-  .landing-bio {
-    font-size: 0.96rem;
-  }
-}
-
-@media (min-width: 761px) and (max-width: 960px) and (orientation: portrait) {
+@media (min-width: 600px) and (max-width: 960px) and (orientation: portrait) {
   .landing-layout {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "intro" "portals" "animal";
-    row-gap: 15px;
+    grid-template-columns: 0.9fr 1.1fr;
   }
-  .landing-intro h1 {
-    font-size: clamp(5.2rem, 10.5vw, 6.6rem);
-    margin-bottom: 20px;
-  }
-  .landing-intro h1 em {
-    display: inline;
-  }
-  .landing-bio {
-    max-width: 53ch;
+  .landing-portrait {
+    width: clamp(140px, 21vw, 185px);
   }
   .landing-animal {
-    width: min(76%, 520px);
-    margin: -25px 0 0;
-    justify-self: end;
+    max-width: 430px;
   }
-  .landing-pelagic {
-    aspect-ratio: 1.95;
-  }
-  .habitat-portals {
-    gap: 21px;
+}
+@media (max-width: 599px) {
+  .landing-layout {
+    grid-template-areas: "portrait animal" "name name" "portals portals" "bio bio";
   }
 }

@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Download, Mail, MapPin, Menu, Pause, Play, X } from "lucide-react";
+import { Compass, Download, Mail, MapPin, Menu, Pause, Play, X } from "lucide-react";
 import { profile } from "./data/site";
 import { pages } from "./pages";
 
 const destinations = [
   ["News", "news"],
   ["Publications", "publications"],
-  ["About", "about"],
+  ["Contact", "contact"],
 ];
 
 function useMotion() {
@@ -75,7 +75,11 @@ function Header({ view, paused, toggle }) {
     <header ref={header} className="site-header">
       <div className="wrap header-inner">
         <a className="brand-home" href="/" aria-label="Ankit Upadhyay, home">
-          <img src="/assets/avatar.webp" alt="" width="34" height="34" />
+          {home ? (
+            <Compass className="brand-compass" size={25} strokeWidth={1.15} aria-hidden="true" />
+          ) : (
+            <img src="/assets/avatar.webp" alt="" width="34" height="34" />
+          )}
           <span>{home ? "Research portfolio" : profile.name}</span>
         </a>
         {!home && (
@@ -127,11 +131,16 @@ function Header({ view, paused, toggle }) {
   );
 }
 
-function Footer({ home }) {
+function Footer({ view }) {
   return (
     <footer className="site-footer">
       <div className="wrap footer-inner">
-        {home ? (
+        {view === "contact" ? (
+          <>
+            <span>© {new Date().getFullYear()} Ankit Upadhyay · Troy, NY</span>
+            <a href="#top">Back to top ↑</a>
+          </>
+        ) : view === "home" ? (
           <>
             <span className="footer-location">
               <MapPin size={14} aria-hidden="true" />
@@ -170,7 +179,7 @@ export default function App({ view, Page }) {
       <main id="content">
         <Page paused={paused} />
       </main>
-      <Footer home={view === "home"} />
+      <Footer view={view} />
     </div>
   );
 }

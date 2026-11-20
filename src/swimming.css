@@ -26,3 +26,19 @@
   overflow: visible;
   pointer-events: none;
 }
+
+/* The illustrated plate holds the first frame while the textured model loads. */
+.swimming-whale .swimming-animal__poster {
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 200ms ease-out;
+}
+.swimming-whale[data-animated] .swimming-animal__poster {
+  visibility: visible;
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .swimming-whale .swimming-animal__poster {
+    transition: none;
+  }
+}

@@ -21,13 +21,13 @@ export const pages = {
       "Papers and manuscripts on individual animal identification, wildlife behavior, multilingual AI, and evidence grounding.",
     load: () => import("./components/PublicationsSection"),
   },
-  about: {
-    image: "/assets/atlas/troy-map.webp",
-    path: "/about/",
-    title: "About & contact · Ankit Upadhyay",
+  contact: {
+    image: "/assets/ankit-portrait.webp",
+    path: "/contact/",
+    title: "Contact me · Ankit Upadhyay",
     description:
-      "Meet Ankit Upadhyay, a computer science PhD researcher at RPI in Troy, New York. Find his contact information, academic profiles, and CV.",
-    load: () => import("./components/AboutPage"),
+      "Get in touch with Ankit Upadhyay about wildlife computer vision, foundation models, research collaborations, and internships.",
+    load: () => import("./components/ContactPage"),
   },
 };
 

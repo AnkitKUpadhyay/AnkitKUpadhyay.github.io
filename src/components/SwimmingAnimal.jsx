@@ -1,15 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { buildGrid, compileShader } from "./wildlifeMesh";
+import WhaleShark from "./WhaleShark";
 import "../swimming.css";
 
 const animals = {
   // Crop coordinates are the measured alpha bounds of the illustrated plates.
-  shark: {
-    src: "/assets/atlas/shark-layer.webp",
-    original: [1923, 818],
-    crop: [792, 12, 1067, 670],
-    margin: [0.165, 0.17, 0.06, 0.08],
-  },
   turtle: {
     src: "/assets/atlas/sea-turtle.webp",
     original: [500, 500],
@@ -21,33 +16,6 @@ const animals = {
 function smooth(a, b, value) {
   const t = Math.max(0, Math.min(1, (value - a) / (b - a)));
   return t * t * (3 - 2 * t);
-}
-
-// The phase travels from the shoulder to the caudal peduncle. The near
-// pectoral overlaps the tail in this three-quarter view, so it has a separate
-// attachment and does not inherit the posterior body's wave.
-function bendShark(u, v, time) {
-  const pectoral = smooth(0.49, 0.83, v) * (1 - smooth(0.35, 0.58, u)) * smooth(0.05, 0.13, u);
-  const axial = Math.min(1.04, Math.max(0, 0.93 - u + 0.19 * (0.66 - v)));
-  const spine = axial + (0.32 - axial) * pectoral;
-  const phase = 2.62 * time + 0.34 * Math.sin(time * 0.54) - 6.25 * spine;
-  const wave = Math.sin(phase);
-  const bend = spine * spine * wave;
-  const caudal = smooth(0.74, 1.0, spine);
-  const finTwist = Math.sin(phase - 0.85) * caudal;
-  const bank = Math.sin(time * 0.78 - pectoral * 1.6);
-
-  return [
-    u -
-      0.082 * bend +
-      0.13 * (v - 0.33) * finTwist +
-      0.022 * caudal * wave * wave +
-      pectoral * bank * 0.015,
-    v +
-      0.099 * bend -
-      (v - 0.33) * caudal * (1 - Math.cos(finTwist * 0.52)) +
-      pectoral * bank * 0.054,
-  ];
 }
 
 function paddle(u, v, px, py, sign, cycle, weight) {
@@ -258,6 +226,12 @@ function rasterRenderer(canvas, mesh, image, animal, cols, rows) {
 }
 
 export default function SwimmingAnimal({ species = "shark", paused = false, className = "" }) {
+  if (species === "shark") return <WhaleShark paused={paused} className={className} />;
+  return <IllustratedTurtle paused={paused} className={className} />;
+}
+
+function IllustratedTurtle({ paused, className }) {
+  const species = "turtle";
   const animal = animals[species];
   const hostRef = useRef(null);
   const syncRef = useRef(null);
@@ -290,7 +264,6 @@ export default function SwimmingAnimal({ species = "shark", paused = false, clas
     let size = { width: 1, height: 1 };
     let mesh, positions, canvas, gl;
     const pointer = matchMedia("(hover: hover) and (pointer: fine)");
-    const isShark = species === "shark";
     setCanvasReady(false);
 
     function schedule() {
@@ -315,10 +288,9 @@ export default function SwimmingAnimal({ species = "shark", paused = false, clas
         currentY += (targetY - currentY) * ease;
         const time = elapsed;
         const blend = smooth(0, 0.85, time);
-        const surge = isShark ? Math.sin(time * 0.6) * 0.011 : Math.sin(time * 1.414 - 1.5) * 0.014;
+        const surge = Math.sin(time * 1.414 - 1.5) * 0.014;
         const driftX = Math.sin(time * 0.33) * 0.014 + currentX * 0.014 + surge;
-        const driftY =
-          Math.sin(time * 0.46) * 0.014 + currentY * 0.02 + surge * (isShark ? 0.25 : 0.85);
+        const driftY = Math.sin(time * 0.46) * 0.014 + currentY * 0.02 + surge * 0.85;
         const roll = Math.sin(time * 0.62) * 0.024 + currentX * 0.021;
         const cos = Math.cos(roll),
           sin = Math.sin(roll),
@@ -326,7 +298,7 @@ export default function SwimmingAnimal({ species = "shark", paused = false, clas
         for (let i = 0; i < positions.length; i += 2) {
           const u = mesh.vertices[i],
             v = mesh.vertices[i + 1];
-          const [x, y] = isShark ? bendShark(u, v, time) : bendTurtle(u, v, time);
+          const [x, y] = bendTurtle(u, v, time);
           const X = (x - 0.56) * aspect,
             Y = y - 0.51;
           positions[i] =
