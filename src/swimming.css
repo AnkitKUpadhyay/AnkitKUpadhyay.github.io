@@ -1,0 +1,28 @@
+.swimming-animal {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.swimming-animal > canvas,
+.swimming-animal__poster {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.swimming-animal[data-animated] .swimming-animal__poster {
+  visibility: hidden;
+}
+
+.pelagic-school {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}

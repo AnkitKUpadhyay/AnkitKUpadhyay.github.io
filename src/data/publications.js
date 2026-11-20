@@ -75,7 +75,10 @@ export const publications = [
       "FAWN pairs concept segmentation and frozen foundation embeddings with CPU-trainable shallow classifiers that transfer zero-shot across unseen wildlife field sites.",
     links: [
       { label: "OpenReview", href: "https://openreview.net/pdf?id=gmZLncO9zM" },
-      { label: "PDF", href: "/files/fawn-2026.pdf" },
+      {
+        label: "Workshop paper",
+        href: "https://drive.google.com/file/d/1OflDX14HKfkomCvWBk0fZSmBGEloUeN3/view",
+      },
     ],
   },
   {
@@ -117,7 +120,13 @@ export const publications = [
     status: "published",
     takeaway:
       "Drone footage captures individuals across viewpoints; we sample informative detections along tracks and cluster multiview embeddings to link left and right flanks.",
-    links: [{ label: "OpenReview", href: "https://openreview.net/pdf?id=hHbRvzQRHI" }],
+    links: [
+      { label: "OpenReview", href: "https://openreview.net/pdf?id=hHbRvzQRHI" },
+      {
+        label: "Workshop paper",
+        href: "https://drive.google.com/file/d/1WCaNiep6sRbWAcoxssKkuwwr3OwrwoOr/view",
+      },
+    ],
   },
   {
     id: "xnli-2023",
@@ -213,14 +222,8 @@ export const publications = [
   {
     id: "cross-view-2026",
     title: "Cross-Viewpoint Identity Retrieval in Bilaterally Asymmetric Patterned Animals",
-    authors: [
-      "Ankit Kumar Upadhyay",
-      "Ekaterina Nepovinnykh",
-      "Fedor Zolotarev",
-      "Charles V. Stewart",
-      "Sara Beery",
-    ],
-    venue: "CVPR 2027 Target",
+    authors: [],
+    venue: "",
     year: "2026",
     badge: "In Preparation",
     area: "Wildlife Vision",

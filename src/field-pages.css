@@ -1,0 +1,491 @@
+/* Undersea news index */
+.tidal-news {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: calc(100svh - var(--nav-h));
+  color: #f5f2e4;
+  background: #082f39;
+}
+.tidal-news__seascape {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    linear-gradient(0deg, #052e3382, transparent 57%),
+    linear-gradient(
+      90deg,
+      #072c32ef 2%,
+      #082f34e8 26%,
+      #0b3239c9 48%,
+      #0a3c3a7d 66%,
+      #063b3b40 86%
+    ),
+    url("/assets/atlas/seagrass-shelf.webp") right center / cover no-repeat;
+}
+.tidal-news__sunlight {
+  position: absolute;
+  inset: -12% -6% 0 40%;
+  pointer-events: none;
+  background: conic-gradient(
+    from 176deg at 87% 1%,
+    transparent 12deg,
+    #c6eed00c 18deg,
+    transparent 22deg,
+    #dfefbe12 28deg,
+    transparent 32deg,
+    #d6eece0d 39deg,
+    transparent 47deg
+  );
+  filter: blur(4px);
+  transform-origin: 87% 4%;
+  animation: tidal-sunlight 14s ease-in-out infinite alternate;
+}
+@keyframes tidal-sunlight {
+  0% {
+    transform: rotate(-2deg) scaleX(0.94);
+    opacity: 0.5;
+  }
+  55% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: rotate(2.5deg) scaleX(1.07);
+    opacity: 1;
+  }
+}
+.tidal-news__turtle {
+  position: absolute;
+  width: clamp(245px, 30vw, 520px);
+  aspect-ratio: 1;
+  right: max(calc((100vw - 1600px) / 2), 3.8%);
+  top: clamp(92px, 13vh, 170px);
+  filter: drop-shadow(0 6px 10px #12362385);
+}
+.tidal-news__sheet {
+  position: relative;
+  padding-block: clamp(52px, 7vw, 110px) clamp(62px, 7.7vw, 135px);
+}
+.tidal-news h1,
+.notebook-about h1 {
+  margin: 0;
+  color: inherit;
+  font: 400 clamp(4.4rem, 7.5vw, 8.3rem) / 0.94 var(--serif);
+  letter-spacing: -0.042em;
+}
+.tidal-news h1 em {
+  color: #b2d8c7;
+  font-weight: 400;
+}
+.tidal-news__index {
+  width: min(60%, 750px);
+  margin-top: clamp(34px, 4.3vw, 72px);
+  border-top: 1px solid #a6d2c46b;
+}
+.tidal-news__entry {
+  border-bottom: 1px solid #a6d2c455;
+}
+.tidal-news__entry summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: clamp(16px, 1.8vw, 26px) 2px;
+  cursor: pointer;
+  list-style: none;
+}
+.tidal-news__entry summary::-webkit-details-marker,
+.notebook-about__funding summary::-webkit-details-marker {
+  display: none;
+}
+.tidal-news__entry-title {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.tidal-news__entry time {
+  font: 400 0.8rem/1.4 var(--mono);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #acd3c9;
+}
+.tidal-news__entry-title > span {
+  font: 400 clamp(1.65rem, 2.5vw, 2.65rem) / 1.07 var(--serif);
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+}
+.tidal-news__entry summary > svg {
+  box-sizing: content-box;
+  flex-shrink: 0;
+  color: #d0ded1;
+  border: 1px solid #82ada574;
+  border-radius: 50%;
+  padding: 7px;
+  transition:
+    transform 0.24s,
+    color 0.2s;
+}
+.tidal-news__entry[open] summary > svg {
+  transform: rotate(45deg);
+}
+.tidal-news__entry summary:hover .tidal-news__entry-title > span {
+  color: #ffe0ab;
+}
+.tidal-news__entry-body {
+  width: min(100%, 55ch);
+  padding: 0 0 23px 2px;
+  color: #daebe4;
+  font: 400 1.04rem/1.62 var(--sans);
+}
+.tidal-news__entry-body p {
+  margin: 0;
+}
+.tidal-news__entry-body a {
+  display: inline-block;
+  margin-top: 11px;
+  color: #f4d0a2;
+  font-size: 0.94rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Personal profile on a map of the Hudson at Troy */
+.notebook-about {
+  background: radial-gradient(ellipse at 15% 19%, #f9f5e7 0, transparent 50%), #f2f0e5;
+  color: #263d39;
+  min-height: calc(100svh - var(--nav-h));
+}
+.notebook-about__spread {
+  display: grid;
+  max-width: 1220px;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(38px, 6.4vw, 100px);
+  align-items: center;
+  padding-block: clamp(50px, 7vw, 110px) clamp(55px, 7vw, 115px);
+}
+.notebook-map {
+  align-self: center;
+  min-width: 0;
+  margin: 0;
+}
+.notebook-map__surface {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 960 / 1040;
+  width: 100%;
+  border: 1px solid #b3b49c;
+  outline: 1px solid #c8c7b4;
+  outline-offset: 3px;
+  background: #e9e7d6;
+}
+.notebook-map__streets,
+.notebook-map__current {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.notebook-map__current path {
+  fill: none;
+  stroke: #eaf3dd;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-dasharray: 4 49 13 28 7 68;
+  opacity: 0.78;
+  animation: notebook-river 16s linear infinite;
+}
+@keyframes notebook-river {
+  to {
+    stroke-dashoffset: -169;
+  }
+}
+.notebook-map__river {
+  position: absolute;
+  top: 76%;
+  left: 33.5%;
+  color: #3b5952;
+  font: italic clamp(0.84rem, 1.25vw, 1.2rem) / 1 var(--serif);
+  white-space: nowrap;
+  transform: translate(-50%, -50%) rotate(-75deg);
+  pointer-events: none;
+}
+.notebook-map__portrait {
+  box-sizing: border-box;
+  position: absolute;
+  left: 13%;
+  top: 9%;
+  width: 45%;
+  height: auto;
+  padding: clamp(5px, 0.65vw, 11px);
+  padding-bottom: clamp(10px, 1.2vw, 19px);
+  border: 1px solid #c3beaa;
+  background: #fffbef;
+  transform: rotate(-4deg);
+  box-shadow: 2px 4px 5px #39413630;
+}
+.notebook-map__campus {
+  position: absolute;
+  left: 70.68%;
+  top: 63.03%;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  transform: translate(-50%, -11px);
+  color: #553b2b;
+  text-decoration: none;
+  font: 600 clamp(0.76rem, 0.98vw, 0.92rem) / 1.1 var(--sans);
+}
+.notebook-map__campus span:last-child {
+  padding: 4px 7px;
+  border: 1px solid #c5b299;
+  border-radius: 2px;
+  background: #fff9e9eb;
+}
+.notebook-map__campus:hover span:last-child {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.notebook-map__pin {
+  width: 10px;
+  height: 10px;
+  border: 2px solid #fff5df;
+  border-radius: 50%;
+  background: #914c31;
+  box-shadow:
+    0 0 0 1px #a98162,
+    0 0 0 5px #a57f5830;
+}
+.notebook-map figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 5px 14px;
+  margin-top: 16px;
+}
+.notebook-map figcaption > span {
+  font: 400 1.35rem/1.2 var(--serif);
+}
+.notebook-map figcaption a {
+  color: #53645c;
+  font-size: 0.78rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.notebook-about__copy {
+  min-width: 0;
+  max-width: 62ch;
+}
+.notebook-about h1 {
+  margin-bottom: clamp(20px, 2.3vw, 35px);
+}
+.notebook-about h1 em {
+  color: #6b6751;
+  font-weight: 400;
+}
+.notebook-about__copy > p {
+  margin: 0;
+  font: 400 clamp(1rem, 1.18vw, 1.18rem) / 1.64 var(--sans);
+  text-wrap: pretty;
+}
+.notebook-about__copy > p + p {
+  margin-top: 12px;
+}
+.notebook-about__contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
+  margin-top: 23px;
+}
+.notebook-about__email {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+.notebook-about__email a,
+.notebook-about__cv {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.notebook-about__email a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.notebook-about__email button {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  border-radius: 50%;
+  background: transparent;
+}
+.notebook-about__email button:hover {
+  background: #d7ddcd;
+}
+.notebook-about__copy-status {
+  font-size: 0.85rem;
+  color: #435b41;
+}
+.notebook-about__copy-status:empty {
+  display: none;
+}
+.notebook-about__cv {
+  min-height: 40px;
+  padding: 7px 12px;
+  border: 1px solid #a5afa1;
+  border-radius: 3px;
+  text-decoration: none;
+}
+.notebook-about__cv:hover {
+  background: #e3e6d8;
+}
+.notebook-about__socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 17px;
+  margin-top: 13px;
+}
+.notebook-about__socials a {
+  padding: 4px 0;
+  color: #314c43;
+  font-size: 0.91rem;
+  text-decoration: underline;
+  text-decoration-color: #9ba89a;
+  text-underline-offset: 4px;
+}
+.notebook-about__funding {
+  margin-top: 19px;
+  padding-top: 13px;
+  border-top: 1px solid #c8cabb;
+}
+.notebook-about__funding summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  cursor: pointer;
+  list-style: none;
+  color: #4e6052;
+  font-size: 0.88rem;
+}
+.notebook-about__funding[open] svg {
+  transform: rotate(180deg);
+}
+.notebook-about__funding p {
+  margin: 7px 0 0;
+  color: #47584f;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.tidal-news[data-paused="true"] *,
+.notebook-about[data-paused="true"] * {
+  animation-play-state: paused !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="running"]) .tidal-news *,
+  html:not([data-motion="running"]) .notebook-about * {
+    animation-play-state: paused !important;
+    transition-duration: 0s !important;
+  }
+}
+@media (max-width: 800px) {
+  .tidal-news__index {
+    width: min(70%, 580px);
+  }
+  .tidal-news__turtle {
+    right: -2%;
+    top: 4%;
+    width: clamp(175px, 30vw, 245px);
+  }
+  .notebook-about__spread {
+    gap: 34px;
+    grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1.2fr);
+  }
+}
+@media (max-width: 640px) {
+  .tidal-news__sheet {
+    padding-top: 52px;
+    padding-bottom: 55px;
+  }
+  .tidal-news h1,
+  .notebook-about h1 {
+    font-size: clamp(3.6rem, 12vw, 5rem);
+  }
+  .tidal-news__index {
+    width: 100%;
+    position: relative;
+    margin-top: clamp(70px, 16vw, 105px);
+  }
+  .tidal-news__turtle {
+    top: 4px;
+    right: 0;
+    width: clamp(120px, 36vw, 185px);
+  }
+  .tidal-news__seascape {
+    background:
+      linear-gradient(180deg, #082c3138 8%, #082d32bd 25%, #082b30d9 83%, #083237a6),
+      linear-gradient(90deg, #082c32ab 8%, #0b323958 68%, #063b3b26),
+      url("/assets/atlas/seagrass-shelf.webp") 70% top / cover no-repeat;
+  }
+  .tidal-news__entry summary {
+    gap: 14px;
+    padding-block: 18px;
+  }
+  .tidal-news__entry summary > svg {
+    padding: 5px;
+    width: 17px;
+    height: 17px;
+  }
+  .tidal-news__entry-body {
+    font-size: 1rem;
+  }
+  .notebook-about__spread {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 34px;
+    padding-block: 36px 50px;
+  }
+  .notebook-about__copy {
+    display: contents;
+  }
+  .notebook-about__copy h1 {
+    order: -2;
+    margin: 0;
+  }
+  .notebook-map {
+    order: -1;
+    width: min(78%, 280px);
+    align-self: flex-start;
+  }
+  .notebook-about__copy > p + p,
+  .notebook-about__contact,
+  .notebook-about__socials,
+  .notebook-about__funding {
+    margin-top: -18px;
+  }
+}
+@media (max-width: 350px) {
+  .tidal-news h1 {
+    font-size: 3.22rem;
+  }
+  .tidal-news__turtle {
+    width: 108px;
+    right: 1px;
+  }
+}
