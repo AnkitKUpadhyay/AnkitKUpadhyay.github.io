@@ -1,68 +1,164 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import {
-  ArrowUpRight, BookOpen, BrainCircuit, BriefcaseBusiness, ChevronDown, Code2,
-  Download, Github, GraduationCap, Mail, MapPin, Menu, Moon, Search, Sparkles, Sun, X,
+  ArrowUpRight,
+  Check,
+  Copy,
+  Download,
+  Mail,
+  Menu,
+  Moon,
+  Sun,
+  X,
 } from "lucide-react";
-import { publications, publicationFilters } from "./data/publications";
-import { projects } from "./data/projects";
-import { experience, honors, service, skills } from "./data/experience";
+import AmbientCanopy from "./components/AmbientCanopy";
+import WildlifeStudio from "./components/WildlifeStudio";
+import PublicationsSection from "./components/PublicationsSection";
+import BackgroundSection from "./components/BackgroundSection";
+import { profile, researchPillars } from "./data/site";
 import "./styles.css";
 
-const navItems = ["Home", "Research", "Publications", "Projects", "Experience", "About", "Contact"];
-const fadeUp = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } } };
+const NAV_ITEMS = [
+  { label: "Research", href: "#research" },
+  { label: "Publications", href: "#publications" },
+  { label: "Background", href: "#background" },
+  { label: "Contact", href: "#contact" },
+];
 
-function useDarkMode() {
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark");
+const reveal = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+function useTheme() {
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem("ankit-theme");
+    return saved === "dark" || saved === "light" ? saved : "light";
+  });
+
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    localStorage.setItem("theme", theme);
+    localStorage.setItem("ankit-theme", theme);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) {
+      meta.setAttribute("content", theme === "dark" ? "#0D1210" : "#F7F4ED");
+    }
   }, [theme]);
+
   return [theme, setTheme];
 }
 
-function App() {
-  const [theme, setTheme] = useDarkMode();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const progress = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+function BrandMark() {
   return (
-    <>
-      <motion.div className="scroll-progress" style={{ width: progress }} />
-      <Header theme={theme} setTheme={setTheme} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-      <main>
-        <Hero />
-        <Research />
-        <Publications />
-        <Projects />
-        <Experience />
-        <About />
-        <Contact />
-      </main>
-      <Footer />
-    </>
+    <svg
+      className="brand-glyph"
+      viewBox="0 0 28 28"
+      width="24"
+      height="24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="14" cy="14" r="12.5" stroke="currentColor" strokeWidth="1.2" opacity="0.32" />
+      <path
+        d="M5.5 14C7.8 9.6 10.7 7.6 14 7.6C17.3 7.6 20.2 9.6 22.5 14C20.2 18.4 17.3 20.4 14 20.4C10.7 20.4 7.8 18.4 5.5 14Z"
+        stroke="currentColor"
+        strokeWidth="1.4"
+      />
+      <circle cx="14" cy="14" r="3.1" fill="currentColor" />
+    </svg>
   );
 }
 
 function Header({ theme, setTheme, menuOpen, setMenuOpen }) {
   return (
     <header className="site-header">
-      <a className="brand" href="#home" aria-label="Go to home"><span className="brand-mark">AU</span><span>Ankit Upadhyay</span></a>
-      <nav className="desktop-nav" aria-label="Primary navigation">
-        {navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`}>{item}</a>)}
-      </nav>
-      <div className="header-actions">
-        <button className="icon-button" type="button" aria-label="Toggle dark and light mode" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-          {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-        </button>
-        <button className="icon-button mobile-only" type="button" aria-label="Open navigation menu" onClick={() => setMenuOpen(true)}><Menu size={20} /></button>
+      <div className="header-inner">
+        <a className="brand" href="#top" aria-label="Ankit Upadhyay — Home">
+          <BrandMark />
+          <span>Ankit Upadhyay</span>
+        </a>
+
+        <nav className="desktop-nav" aria-label="Primary navigation">
+          {NAV_ITEMS.map((item) => (
+            <a key={item.href} href={item.href}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="header-actions">
+          <a
+            className="header-cv"
+            href={profile.cvUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span>CV</span>
+            <ArrowUpRight size={13} />
+          </a>
+
+          <button
+            className="icon-btn"
+            type="button"
+            aria-label={`Switch to ${theme === "dark" ? "daylight" : "night"} theme`}
+            title={theme === "dark" ? "Daylight Field Journal" : "Night Survey Mode"}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+
+          <button
+            className="icon-btn mobile-only"
+            type="button"
+            aria-label="Open menu"
+            onClick={() => setMenuOpen(true)}
+          >
+            <Menu size={18} />
+          </button>
+        </div>
       </div>
+
       <AnimatePresence>
         {menuOpen && (
-          <motion.div className="mobile-menu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <button className="icon-button close-menu" type="button" aria-label="Close navigation menu" onClick={() => setMenuOpen(false)}><X size={20} /></button>
-            {navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}>{item}</a>)}
+          <motion.div
+            className="mobile-menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
+          >
+            <button
+              className="icon-btn close-btn"
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setMenuOpen(false)}
+            >
+              <X size={18} />
+            </button>
+            <div className="mobile-menu-links">
+              {NAV_ITEMS.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              ))}
+              <a
+                href={profile.cvUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setMenuOpen(false)}
+              >
+                Curriculum Vitae ↗
+              </a>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -70,151 +166,255 @@ function Header({ theme, setTheme, menuOpen, setMenuOpen }) {
   );
 }
 
-function Hero() {
+function Hero({ theme }) {
   return (
-    <section className="hero section" id="home">
-      <NeuralBackdrop />
-      <div className="hero-grid">
-        <motion.div initial="hidden" animate="show" variants={fadeUp} className="hero-copy">
-          <p className="eyebrow"><Sparkles size={15} /> AI for biodiversity conservation and social good</p>
-          <h1>Ankit Upadhyay</h1>
-          <p className="hero-subtitle">Computer Science PhD student at RPI building foundation-model pipelines for animal re-identification, ecological video understanding, and multilingual AI for underrepresented languages.</p>
+    <section className="hero" id="top">
+      <AmbientCanopy theme={theme} />
+      <div className="container hero-grid">
+        <motion.div
+          className="hero-copy"
+          initial="hidden"
+          animate="show"
+          variants={reveal}
+        >
+          <p className="hero-kicker">
+            {profile.role} · {profile.institution}
+          </p>
+          <h1>
+            AI for wildlife,
+            <br />
+            <em>seen closely.</em>
+          </h1>
+          <p className="hero-bio">{profile.bio}</p>
+
           <div className="hero-actions">
-            <a className="button primary" href="#publications"><BookOpen size={18} /> View publications</a>
-            <a className="button secondary" href="/files/Ankit_Upadhyay_CV.pdf"><Download size={18} /> Download CV</a>
+            <a className="btn-primary" href="#publications">
+              <span>Publications</span>
+              <ArrowUpRight size={15} />
+            </a>
+            <a
+              className="btn-secondary"
+              href={profile.cvUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Download size={15} />
+              <span>Curriculum Vitae</span>
+            </a>
           </div>
-          <div className="hero-stats" aria-label="Research highlights">
-            <Stat value="5" label="publications and submissions" />
-            <Stat value="4.0" label="PhD GPA at RPI" />
-            <Stat value="240K+" label="wildlife detections curated" />
+
+          <div className="hero-links" aria-label="Academic and code profiles">
+            <a href={`mailto:${profile.email}`}>Email</a>
+            {profile.socials.map((s) => (
+              <a key={s.label} href={s.href} target="_blank" rel="noreferrer">
+                {s.label}
+              </a>
+            ))}
           </div>
         </motion.div>
-        <motion.div className="portrait-shell" initial={{ opacity: 0, scale: 0.94, rotate: -1 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} transition={{ duration: 0.7, delay: 0.15 }}>
-          <img src="/assets/headshot.jpeg" alt="Headshot of Ankit Upadhyay" />
-          <div className="portrait-card"><span>Research focus</span><strong>Animal re-ID, foundation models, low-resource NLP</strong></div>
+
+        <motion.figure
+          className="hero-portrait"
+          initial={{ opacity: 0, y: 18, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.75, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="portrait-frame">
+            <img
+              src="/assets/headshot.jpeg"
+              alt="Portrait of Ankit Upadhyay"
+            />
+          </div>
+          <figcaption className="portrait-caption">
+            <span>{profile.name}</span>
+            <span>{profile.location}</span>
+          </figcaption>
+        </motion.figure>
+      </div>
+    </section>
+  );
+}
+
+function ResearchSection({ theme, onJumpToPaper }) {
+  return (
+    <section className="section research-section" id="research">
+      <div className="container">
+        <motion.div
+          className="section-head research-head"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={reveal}
+        >
+          <div>
+            <p className="eyebrow">Interactive Field Lab</p>
+            <h2>Seeing the individual, not the background.</h2>
+          </div>
+          <p className="section-lead">
+            Choose a species and sweep the counterfactual lens to inspect how
+            foundation-model segmentation separates biometric identity from
+            habitat shortcuts.
+          </p>
         </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <WildlifeStudio theme={theme} onJumpToPaper={onJumpToPaper} />
+        </motion.div>
+
+        <div className="pillars-grid">
+          {researchPillars.map((pillar) => (
+            <motion.article
+              key={pillar.index}
+              className="pillar-item"
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-40px" }}
+              variants={reveal}
+            >
+              <span className="pillar-index">{pillar.index}</span>
+              <h3>{pillar.title}</h3>
+              <p>{pillar.text}</p>
+            </motion.article>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-function Stat({ value, label }) {
-  return <div><strong>{value}</strong><span>{label}</span></div>;
-}
+function ContactSection() {
+  const [copied, setCopied] = useState(false);
 
-function NeuralBackdrop() {
-  return <div className="neural-backdrop" aria-hidden="true">{Array.from({ length: 18 }).map((_, index) => <span key={index} style={{ "--i": index }} />)}</div>;
-}
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${profile.email}`;
+    }
+  }
 
-function SectionTitle({ eyebrow, title, children }) {
-  return (
-    <motion.div className="section-title" initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} variants={fadeUp}>
-      <p className="eyebrow">{eyebrow}</p>
-      <h2>{title}</h2>
-      {children && <p>{children}</p>}
-    </motion.div>
-  );
-}
-
-function Research() {
-  const areas = [
-    { icon: BrainCircuit, title: "AI for biodiversity conservation", text: "Field-ready systems that connect foundation models, segmentation, tracking, and human verification for ecological monitoring." },
-    { icon: Search, title: "Animal re-identification", text: "Video-first pipelines for viewpoint-aware identity matching across long-tailed species, occlusion, motion, and domain shift." },
-    { icon: GraduationCap, title: "Democratized multilingual AI", text: "Cross-lingual NLU and transfer learning approaches that improve access for low-resource and underrepresented languages." },
-  ];
-  return (
-    <section className="section research-band" id="research">
-      <SectionTitle eyebrow="Research" title="Building AI systems that can leave the lab">My work focuses on robust perception and representation learning for ecological settings, with a parallel commitment to multilingual NLP for social good.</SectionTitle>
-      <div className="area-grid">
-        {areas.map((area) => <motion.article className="area-card" key={area.title} whileHover={{ y: -6 }} initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}><area.icon size={25} /><h3>{area.title}</h3><p>{area.text}</p></motion.article>)}
-      </div>
-      <div className="abstract-list">
-        {publications.map((paper) => <details key={paper.id} className="abstract-item"><summary><span>{paper.title}</span><ChevronDown size={18} /></summary><p>{paper.abstract}</p></details>)}
-      </div>
-    </section>
-  );
-}
-
-function Publications() {
-  const [activeFilter, setActiveFilter] = useState("All");
-  const featured = publications.filter((paper) => paper.featured);
-  const filtered = useMemo(() => activeFilter === "All" ? publications : publications.filter((paper) => paper.type === activeFilter || paper.area === activeFilter), [activeFilter]);
-  return (
-    <section className="section" id="publications">
-      <SectionTitle eyebrow="Publications" title="Selected papers and research outputs">Publication cards foreground the research question, venue, links, and exact abstract text.</SectionTitle>
-      <div className="featured-grid">{featured.map((paper) => <PublicationCard key={paper.id} paper={paper} featured />)}</div>
-      <div className="filter-bar" aria-label="Publication filters">{publicationFilters.map((filter) => <button key={filter} className={activeFilter === filter ? "active" : ""} type="button" onClick={() => setActiveFilter(filter)}>{filter}</button>)}</div>
-      <div className="publication-list">{filtered.map((paper) => <PublicationCard key={paper.id} paper={paper} />)}</div>
-    </section>
-  );
-}
-
-function PublicationCard({ paper, featured = false }) {
-  return (
-    <motion.article className={`publication-card ${featured ? "featured" : ""}`} initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
-      <div className="pub-meta"><span>{paper.year}</span><span>{paper.type}</span><span>{paper.area}</span></div>
-      <h3>{paper.title}</h3>
-      <p className="authors">{paper.authors}</p>
-      <p className="venue">{paper.venue}</p>
-      <p>{paper.summary}</p>
-      <details><summary>Abstract <ChevronDown size={16} /></summary><p>{paper.abstract}</p></details>
-      <div className="link-row">{paper.links.map((link) => <a key={link.label} href={link.href} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={15} /></a>)}</div>
-    </motion.article>
-  );
-}
-
-function Projects() {
-  return (
-    <section className="section project-band" id="projects">
-      <SectionTitle eyebrow="Projects" title="Engineering work with research-grade rigor">A mix of scalable ML systems, creative generative pipelines, and applied AI prototypes.</SectionTitle>
-      <div className="project-grid">{projects.map((project) => <motion.article className="project-card" key={project.title} initial="hidden" whileInView="show" viewport={{ once: true }} whileHover={{ y: -5 }} variants={fadeUp}><div className="project-topline"><Code2 size={22} /><span>{project.year}</span></div><h3>{project.title}</h3><p>{project.description}</p><div className="tag-row">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><div className="link-row">{project.links.map((link) => <a key={link.label} href={link.href} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={15} /></a>)}</div></motion.article>)}</div>
-    </section>
-  );
-}
-
-function Experience() {
-  return (
-    <section className="section" id="experience">
-      <SectionTitle eyebrow="Experience" title="Research, teaching, and leadership trajectory">The timeline highlights the arc from multilingual NLP to deployable ecological AI.</SectionTitle>
-      <div className="timeline">{experience.map((item) => <motion.article className="timeline-item" key={item.title} initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}><div className="timeline-date">{item.period}</div><div className="timeline-content"><h3>{item.title}</h3><p className="venue">{item.role}</p><p>{item.description}</p></div></motion.article>)}</div>
-    </section>
-  );
-}
-
-function About() {
-  return (
-    <section className="section about-band" id="about">
-      <SectionTitle eyebrow="About" title="A researcher-engineer for high-impact AI">I am a Computer Science PhD student at Rensselaer Polytechnic Institute, working across computer vision, biodiversity science, and knowledge-guided AI.</SectionTitle>
-      <div className="about-grid">
-        <div className="about-copy"><p>My research develops label-efficient systems for wildlife monitoring: selecting informative frames from video, separating identity cues from ecological background, linking views across time, and keeping humans in the loop only where their judgment matters most.</p><p>Before RPI, I worked on cross-lingual natural language inference and low-resource language transfer, work that continues to shape how I think about equitable AI systems.</p></div>
-        <div className="skills-panel">{Object.entries(skills).map(([group, values]) => <div key={group}><h3>{group}</h3><div className="tag-row">{values.map((value) => <span key={value}>{value}</span>)}</div></div>)}</div>
-      </div>
-      <div className="honors-grid"><InfoList title="Selected Honors" items={honors} /><InfoList title="Leadership and Service" items={service} /></div>
-    </section>
-  );
-}
-
-function InfoList({ title, items }) {
-  return <article className="info-list"><h3>{title}</h3>{items.map((item) => <p key={item}>{item}</p>)}</article>;
-}
-
-function Contact() {
-  const contacts = [
-    { label: "Email", href: "mailto:upadha2@rpi.edu", icon: Mail },
-    { label: "GitHub", href: "https://github.com/AnkitKUpadhyay", icon: Github },
-    { label: "Google Scholar", href: "https://scholar.google.com/citations?user=dNClByYAAAAJ&hl=en", icon: GraduationCap },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/ankit-kumar-upadhyay-b332b8186/", icon: BriefcaseBusiness },
-  ];
   return (
     <section className="section contact-section" id="contact">
-      <div><p className="eyebrow">Contact</p><h2>Open to research collaborations, internships, and future faculty or industry research conversations.</h2><p><MapPin size={17} /> Troy, New York</p></div>
-      <div className="contact-links">{contacts.map((contact) => <a key={contact.label} href={contact.href} target={contact.href.startsWith("mailto") ? undefined : "_blank"} rel="noreferrer"><contact.icon size={20} /><span>{contact.label}</span><ArrowUpRight size={17} /></a>)}</div>
+      <div className="container contact-inner">
+        <motion.div
+          className="contact-copy"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={reveal}
+        >
+          <p className="eyebrow">Contact</p>
+          <h2>
+            Let&apos;s build <em>field-ready</em> AI together.
+          </h2>
+          <p>
+            Always happy to connect on wildlife computer vision, foundation
+            models, research collaborations, and internships.
+          </p>
+        </motion.div>
+
+        <motion.div
+          className="contact-actions"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={reveal}
+        >
+          <div className="email-bar">
+            <a className="email-link" href={`mailto:${profile.email}`}>
+              <Mail size={16} />
+              <span>{profile.email}</span>
+            </a>
+            <button
+              type="button"
+              className="copy-btn"
+              onClick={copyEmail}
+              aria-label="Copy email address"
+            >
+              {copied ? <Check size={14} /> : <Copy size={14} />}
+              <span>{copied ? "Copied" : "Copy"}</span>
+            </button>
+          </div>
+
+          <div className="contact-socials">
+            {profile.socials.map((s) => (
+              <a key={s.label} href={s.href} target="_blank" rel="noreferrer">
+                <span>{s.label}</span>
+                <ArrowUpRight size={14} />
+              </a>
+            ))}
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 }
 
 function Footer() {
-  return <footer><span>© 2026 Ankit Upadhyay</span><a href="#home">Back to top</a></footer>;
+  return (
+    <footer className="site-footer">
+      <div className="container footer-inner">
+        <span>© {new Date().getFullYear()} {profile.name} · {profile.location}</span>
+        <a href="#top">Back to top ↑</a>
+      </div>
+    </footer>
+  );
+}
+
+function App() {
+  const [theme, setTheme] = useTheme();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [pubFilter, setPubFilter] = useState("all");
+  const [highlightId, setHighlightId] = useState(null);
+  const { scrollYProgress } = useScroll();
+  const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  function handleJumpToPaper(paperId) {
+    setPubFilter("all");
+    requestAnimationFrame(() => {
+      const target = document.getElementById(`paper-${paperId}`);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        setHighlightId(paperId);
+        setTimeout(() => setHighlightId(null), 2400);
+      } else {
+        document.getElementById("publications")?.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  }
+
+  return (
+    <>
+      <motion.div className="scroll-progress" style={{ width: progressWidth }} />
+      <Header
+        theme={theme}
+        setTheme={setTheme}
+        menuOpen={menuOpen}
+        setMenuOpen={setMenuOpen}
+      />
+      <main>
+        <Hero theme={theme} />
+        <ResearchSection theme={theme} onJumpToPaper={handleJumpToPaper} />
+        <div className="container">
+          <PublicationsSection
+            filter={pubFilter}
+            setFilter={setPubFilter}
+            highlightId={highlightId}
+          />
+          <BackgroundSection />
+        </div>
+        <ContactSection />
+      </main>
+      <Footer />
+    </>
+  );
 }
 
 createRoot(document.getElementById("root")).render(<App />);
